@@ -18,6 +18,7 @@ services:
       - db
   db:
     image: mysql
+    user: "1000:50"
     restart: on-failure
     environment:
       - MYSQL_ROOT_PASSWORD=password
