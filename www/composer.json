@@ -1,0 +1,18 @@
+{
+    "name": "news-app",
+    "description": "News Rest Api",
+    "authors": [
+        {
+            "name": "Kovaleva Tatiana",
+            "email": "truechudo@gmail.com"
+        }
+    ],
+    "require": {
+        "slim/slim": "^3.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "": "classes/"
+        }
+    }
+}
