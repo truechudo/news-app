@@ -38,28 +38,32 @@ try {
         if (empty($author)) {
 
             $errorCode = 404;
-            echo json_encode([
-                'error' => [
-                    'status' => 'Not Found',
-                    'errorCode' => $errorCode
-                ]
-            ]);
+            $response->getBody()->write(
+                json_encode([
+                    'error' => [
+                        'status' => 'Not Found',
+                        'errorCode' => $errorCode
+                    ]
+                ])
+            );
 
             return $response->withStatus($errorCode);
         }
 
-        echo json_encode([
-            'response' => [
-                'id' => $author['id'],
-                'name' => $author['name'],
-                'nameAblative' => $author['nameAblative'],
-                'avatar' => [
-                  'fileName' => $author['avatar'],
-                  'width' => $author['width'],
-                  'height' => $author['height']
+        $response->getBody()->write(
+            json_encode([
+                'response' => [
+                    'id' => $author['id'],
+                    'name' => $author['name'],
+                    'nameAblative' => $author['nameAblative'],
+                    'avatar' => [
+                      'fileName' => $author['avatar'],
+                      'width' => $author['width'],
+                      'height' => $author['height']
+                    ]
                 ]
-            ]
-        ]);
+            ])
+        );
     });
 
     $app->delete('/api/v1/author/{id}', function (Request $request, Response $response, $args) {
@@ -70,9 +74,11 @@ try {
 
         $response->withHeader('Content-Type', 'application/json; charset=utf-8');
 
-        echo json_encode([
-            'response' => []
-        ]);
+        $response->getBody()->write(
+            json_encode([
+                'response' => []
+            ])
+        );
 
     });
 
