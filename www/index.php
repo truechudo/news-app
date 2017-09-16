@@ -1,5 +1,4 @@
 <?php
-//echo phpinfo();
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 
@@ -20,81 +19,16 @@ try {
     };
 
     $app->get('/', function (Request $request, Response $response) {
-
         $response->getBody()->write('Main Page');
-
-        return $response;
     });
 
-    $app->get('/api/v1/author/{id}', function (Request $request, Response $response, $args) {
+    $app->group('/api/v1/author', function () use ($app) {
 
-        $authorId = (int) $args['id'];
-        $query = $this->db->prepare("SELECT * FROM author WHERE id = :id LIMIT 1");
-        $query->execute(['id' => $authorId]);
-        $author = $query->fetch();
+        $app->map(['GET', 'DELETE', 'PUT', 'POST'], '[/{id}]', Controller\AuthorAction::class);
 
-        $response->withHeader('Content-Type', 'application/json; charset=utf-8');
-
-        if (empty($author)) {
-
-            $errorCode = 404;
-            $response->getBody()->write(
-                json_encode([
-                    'error' => [
-                        'status' => 'Not Found',
-                        'errorCode' => $errorCode
-                    ]
-                ])
-            );
-
-            return $response->withStatus($errorCode);
-        }
-
-        $response->getBody()->write(
-            json_encode([
-                'response' => [
-                    'id' => $author['id'],
-                    'name' => $author['name'],
-                    'nameAblative' => $author['nameAblative'],
-                    'avatar' => [
-                      'fileName' => $author['avatar'],
-                      'width' => $author['width'],
-                      'height' => $author['height']
-                    ]
-                ]
-            ])
-        );
-    });
-
-    $app->delete('/api/v1/author/{id}', function (Request $request, Response $response, $args) {
-
-        $authorId = (int) $args['id'];
-        $query = $this->db->prepare("DELETE FROM author WHERE id = :id LIMIT 1");
-        $query->execute(['id' => $authorId]);
-
-        $response->withHeader('Content-Type', 'application/json; charset=utf-8');
-
-        $response->getBody()->write(
-            json_encode([
-                'response' => []
-            ])
-        );
-
-    });
-
-    $app->put('/api/v1/author/{id}', function (Request $request, Response $response, $args) {
-
-        $input = json_decode($request->getBody());
-
-        mydebug($input);
-
-    });
-
-    $app->post('/api/v1/author/{id}', function (Request $request, Response $response, $args) {
-
-        $input = json_decode($request->getBody());
-
-        mydebug($input);
+    })->add(function ($request, $response, $next) {
+        $response = $next($request, $response);
+        return $response->withHeader('Content-Type', 'application/json; charset=utf-8');
     });
 
     $app->run();
