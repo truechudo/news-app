@@ -12,21 +12,27 @@ class Author {
 
     public function getAutor($id) {
         $id = (int) $id;
-        $query = $this->_db->prepare("SELECT * FROM author WHERE id = :id LIMIT 1");
+        if (!$id) {
+            return false;
+        }
+        $query = $this->_db->prepare('SELECT * FROM author WHERE id = :id LIMIT 1');
         $query->execute(['id' => $id]);
         return $query->fetch();
     }
 
     public function deleteAuthor($id) {
         $id = (int) $id;
-        $query = $this->_db->prepare("DELETE FROM author WHERE id = :id LIMIT 1");
+        if (!$id) {
+            return false;
+        }
+        $query = $this->_db->prepare('DELETE FROM author WHERE id = :id LIMIT 1');
         $query->execute(['id' => $id]);
         return $query->rowCount();
     }
 
     public function updateAuthor ($id, $data) {
 
-        $query = $this->_db->prepare("
+        $query = $this->_db->prepare('
               UPDATE author SET
                name = :name,
                nameAblative = :nameAblative,
@@ -34,7 +40,7 @@ class Author {
                width = :width,
                height = :height
               WHERE id = :id
-            ");
+            ');
         $query->execute(array_merge($data, ['id' => $id]));
 
         return $query->rowCount();
@@ -42,13 +48,21 @@ class Author {
 
     public function addAuthor($data) {
 
+        $dataEmpty = [
+            'name' => '',
+            'nameAblative' => '',
+            'avatar' => '',
+            'width' => 0,
+            'height' => 0
+        ];
+
         $query = $this->_db->prepare("
               INSERT INTO author
                 (name, nameAblative, avatar, width, height)
               VALUES ( :name, :nameAblative, :avatar, :width, :height)
             ");
 
-        if ($query->execute($data)) {
+        if ($query->execute(array_merge($dataEmpty, $data))) {
             return $this->_db->lastInsertId();
         }
         return false;

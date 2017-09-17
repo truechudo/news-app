@@ -18,8 +18,19 @@ try {
         return $pdo;
     };
 
-    $app->get('/', function (Request $request, Response $response) {
-        $response->getBody()->write('Main Page');
+    $app->get('/api/swagger.json', function (Request $request, Response $response) {
+
+        try {
+            $swagger = \Swagger\scan('classes/Controller/');
+        } catch (Exception $e) {
+            echo $e;
+        }
+
+        $response->getBody()->write($swagger);
+
+    })->add(function ($request, $response, $next) {
+        $response = $next($request, $response);
+        return $response->withHeader('Content-Type', 'application/json; charset=utf-8');
     });
 
     $app->group('/api/v1/author', function () use ($app) {

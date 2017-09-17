@@ -2,6 +2,22 @@
 namespace Controller;
 use Model;
 
+/**
+ * @SWG\Swagger(
+ *      @SWG\Info(
+ *          version="1.0.0",
+ *          title="Author API"
+ *      ),
+ *      host="localhost",
+ *      basePath="/api/v1",
+ *      schemes={"http"},
+ *      consumes={"application/json"},
+ *      produces={"application/json"}
+ * )
+ *
+ * Class AuthorAction
+ * @package Controller
+ */
 class AuthorAction {
 
     protected $_container;
@@ -29,6 +45,32 @@ class AuthorAction {
         return $response;
     }
 
+    /**
+     * @SWG\Get(
+     *  path="/author/{id}",
+     *  summary="Get Author",
+     *  description="Returns a author based on a single ID",
+     *  @SWG\Parameter(
+     *      name="id",
+     *      in="path",
+     *      required=true,
+     *      type="integer",
+     *      format="int32"
+     *  ),
+     *  @SWG\Response(
+     *      response=200,
+     *      description="Success result"
+     *  ),
+     *  @SWG\Response(
+     *      response=404,
+     *      description="Not Found"
+     *  )
+     * )
+     *
+     * @param $response
+     * @param $args
+     * @return mixed
+     */
     private function _getAuthor($response, $args) {
 
         if (!empty($args['id'])) {
@@ -55,6 +97,32 @@ class AuthorAction {
         );
     }
 
+    /**
+     * @SWG\Delete(
+     *  path="/author/{id}",
+     *  summary="Get Author",
+     *  description="Returns a author based on a single ID",
+     *  @SWG\Parameter(
+     *      name="id",
+     *      in="path",
+     *      required=true,
+     *      type="integer",
+     *      format="int32"
+     *  ),
+     *  @SWG\Response(
+     *      response=200,
+     *      description="Success result"
+     *  ),
+     *  @SWG\Response(
+     *      response=404,
+     *      description="Not Found"
+     *  )
+     * )
+     *
+     * @param $response
+     * @param $args
+     * @return mixed
+     */
     private function _deleteAuthor($response, $args) {
 
         if (!empty($args['id'])) {
@@ -83,6 +151,35 @@ class AuthorAction {
 
         $input = json_decode($request->getBody());
 
+        $errors = [];
+        if (
+            isset($input->avatar->width) && !filter_var($input->avatar->width, FILTER_VALIDATE_INT)
+        ) {
+            $errors['width'] = 'Ширина картинки должна быть целым числом';
+        }
+
+        if (
+            isset($input->avatar->height) && !filter_var($input->avatar->height, FILTER_VALIDATE_INT)
+        ) {
+            $errors['height'] = 'Высота картинки должна быть целым числом';
+        }
+
+        if (
+            isset($input->name) && empty($input->name)
+        ) {
+            $errors['name'] = 'Имя не может быть пустым';
+        }
+
+        if (
+            isset($input->nameAblative) && empty($input->nameAblative)
+        ) {
+            $errors['nameAblative'] = 'Имя в творительном падеже не может быть пустым';
+        }
+
+        if (!empty($errors)) {
+            return $this->_prepareErrorResponse($response, 400, $errors);
+        }
+
         $authorUpdateData = [
             'name' => $input->name ?? $author['name'],
             'nameAblative' => $input->nameAblative ?? $author['nameAblative'],
@@ -107,6 +204,31 @@ class AuthorAction {
     private function _addAuthor($request, $response) {
 
         $input = json_decode($request->getBody());
+
+        $errors = [];
+        if (
+            isset($input->avatar->width) && !filter_var($input->avatar->width, FILTER_VALIDATE_INT)
+        ) {
+            $errors['width'] = 'Ширина картинки должна быть целым числом';
+        }
+
+        if (
+            isset($input->avatar->height) && !filter_var($input->avatar->height, FILTER_VALIDATE_INT)
+        ) {
+            $errors['height'] = 'Высота картинки должна быть целым числом';
+        }
+
+        if (empty($input->name)) {
+            $errors['name'] = 'Имя не может быть пустым';
+        }
+
+        if (empty($input->nameAblative)) {
+            $errors['nameAblative'] = 'Имя в творительном падеже не может быть пустым';
+        }
+
+        if (!empty($errors)) {
+            return $this->_prepareErrorResponse($response, 400, $errors);
+        }
 
         $authorData = [
             'name' => $input->name ?? '',
