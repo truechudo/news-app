@@ -1,0 +1,173 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "Author API",
+        "version": "1.0.0"
+    },
+    "host": "test.local",
+    "basePath": "/api/v1",
+    "schemes": [
+        "http"
+    ],
+    "consumes": [
+        "application/json"
+    ],
+    "produces": [
+        "application/json"
+    ],
+    "paths": {
+        "/author/{id}": {
+            "get": {
+                "summary": "Данные автора по ID",
+                "description": "Возвращает данные автора по его ID",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID автора",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success result"
+                    },
+                    "404": {
+                        "description": "Author not found"
+                    }
+                }
+            },
+            "put": {
+                "summary": "Обновление автора",
+                "description": "Обновляет автора по ID",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID автора, которого нужно обновить",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "description": "Author object",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#definitions/Author"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success result"
+                    },
+                    "405": {
+                        "description": "Validation error"
+                    },
+                    "404": {
+                        "description": "Author not found"
+                    }
+                }
+            },
+            "post": {
+                "summary": "Добавление автора",
+                "description": "Добавляет нового автора",
+                "parameters": [
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "description": "Author object",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#definitions/Author"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success result"
+                    },
+                    "405": {
+                        "description": "Validation error"
+                    },
+                    "404": {
+                        "description": "Author not found"
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Удаление автора",
+                "description": "Удаляет автора по его ID",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID автора",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success result"
+                    },
+                    "404": {
+                        "description": "Author not found"
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "Author": {
+            "required": [
+                "name",
+                "nameAblative"
+            ],
+            "properties": {
+                "id": {
+                    "description": "ID атора",
+                    "type": "integer",
+                    "format": "int64",
+                    "example": "1"
+                },
+                "name": {
+                    "description": "Имя автора",
+                    "type": "string",
+                    "example": "Стас Соколов"
+                },
+                "nameAblative": {
+                    "description": "Имя автора в творительном падеже",
+                    "type": "string",
+                    "example": "со Стасом Соколовым"
+                },
+                "avatar": {
+                    "description": "Картинка автора",
+                    "properties": {
+                        "fileName": {
+                            "description": "Путь до картинки",
+                            "type": "string"
+                        },
+                        "width": {
+                            "description": "Ширина картинки",
+                            "type": "integer",
+                            "format": "int32"
+                        },
+                        "height": {
+                            "description": "Высота картинки",
+                            "type": "integer",
+                            "format": "int32"
+                        }
+                    },
+                    "type": "object"
+                }
+            },
+            "type": "object"
+        }
+    }
+}
