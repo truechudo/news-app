@@ -13,7 +13,7 @@ class Bootstrap {
         $this->_app = new \Slim\App(['settings' => $this->_config]);
     }
 
-    public function init()
+    private function _init()
     {
         $container = $this->_app->getContainer();
         $container['db'] = function ($c) {
@@ -27,7 +27,7 @@ class Bootstrap {
 
     public function run()
     {
-        $this->init();
+        $this->_init();
 
         $app = $this->_app;
         $app->group('/api/v1/author', function () use ($app) {
