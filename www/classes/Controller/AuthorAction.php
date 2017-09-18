@@ -224,7 +224,7 @@ class AuthorAction {
         $errors = $this->_validateAuthor((array)$input);
 
         if (!empty($errors)) {
-            return $this->_prepareErrorResponse($response, 400, $errors);
+            return $this->_prepareErrorResponse($response, 405, $errors);
         }
 
         $id = $this->_authorModel->addAuthor((array)$input);
