@@ -166,38 +166,7 @@ class AuthorAction {
 
         $input = json_decode($request->getBody());
 
-        $errors = [];
-
-        if (empty($input)) {
-            $errors[] = 'Нет параметров для обновления';
-        }
-
-        if (isset($input->name) && empty($input->name)) {
-            $errors[] = 'Имя не может быть пустым';
-        }
-
-        if (isset($input->nameAblative) && empty($input->nameAblative)) {
-            $errors[] = 'Имя в творительном падеже не может быть пустым';
-        }
-
-        if (isset($input->avatar)) {
-
-            if (empty($input->avatar->fileName)) {
-                $errors[] = 'Путь до файла не может быть пустым';
-            }
-
-            if (empty($input->avatar->width)) {
-                $errors[] = 'Ширина картинки не задана';
-            } elseif (!filter_var($input->avatar->width, FILTER_VALIDATE_INT)) {
-                $errors[] = 'Ширина картинки должна быть целым числом';
-            }
-
-            if (empty($input->avatar->height)) {
-                $errors[] = 'Высота картинки не задана';
-            } elseif (!filter_var($input->avatar->height, FILTER_VALIDATE_INT)) {
-                $errors[] = 'Высота картинки должна быть целым числом';
-            }
-        }
+        $errors = $this->_validateAuthor((array)$input, false);
 
         if (!empty($errors)) {
             return $this->_prepareErrorResponse($response, 405, $errors);
@@ -252,34 +221,7 @@ class AuthorAction {
 
         $input = json_decode($request->getBody());
 
-        $errors = [];
-
-        if (empty($input->name)) {
-            $errors[] = 'Имя не может быть пустым';
-        }
-
-        if (empty($input->nameAblative)) {
-            $errors[] = 'Имя в творительном падеже не может быть пустым';
-        }
-
-        if (isset($input->avatar)) {
-
-            if (empty($input->avatar->fileName)) {
-                $errors[] = 'Путь до файла не может быть пустым';
-            }
-
-            if (empty($input->avatar->width)) {
-                $errors[] = 'Ширина картинки не задана';
-            } elseif (!filter_var($input->avatar->width, FILTER_VALIDATE_INT)) {
-                $errors[] = 'Ширина картинки должна быть целым числом';
-            }
-
-            if (empty($input->avatar->height)) {
-                $errors[] = 'Высота картинки не задана';
-            } elseif (!filter_var($input->avatar->height, FILTER_VALIDATE_INT)) {
-                $errors[] = 'Высота картинки должна быть целым числом';
-            }
-        }
+        $errors = $this->_validateAuthor((array)$input);
 
         if (!empty($errors)) {
             return $this->_prepareErrorResponse($response, 400, $errors);
@@ -294,6 +236,44 @@ class AuthorAction {
         return $response->getBody()->write(
             json_encode(['id' => $id])
         );
+    }
+
+    private function _validateAuthor($input, $newAuthor = true) {
+        $errors = [];
+
+        if (empty($input) && !$newAuthor) {
+            $errors[] = 'Нет параметров для обновления';
+        }
+
+        if ((isset($input['name']) || $newAuthor) && empty($input['name'])) {
+            $errors[] = 'Имя не может быть пустым';
+        }
+
+        if ((isset($input['nameAblative']) || $newAuthor) && empty($input['nameAblative'])) {
+            $errors[] = 'Имя в творительном падеже не может быть пустым';
+        }
+
+        if (!isset($input['avatar'])) {
+            return $errors;
+        }
+
+        if (empty($input['avatar']['fileName'])) {
+            $errors[] = 'Путь до файла не может быть пустым';
+        }
+
+        if (empty($input['avatar']['width'])) {
+            $errors[] = 'Ширина картинки не задана';
+        } elseif (!filter_var($input['avatar']['width'], FILTER_VALIDATE_INT)) {
+            $errors[] = 'Ширина картинки должна быть целым числом';
+        }
+
+        if (empty($input['avatar']['height'])) {
+            $errors[] = 'Высота картинки не задана';
+        } elseif (!filter_var($input['avatar']['height'], FILTER_VALIDATE_INT)) {
+            $errors[] = 'Высота картинки должна быть целым числом';
+        }
+
+        return $errors;
     }
 
 
