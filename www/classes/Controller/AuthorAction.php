@@ -164,9 +164,9 @@ class AuthorAction {
      */
     private function _updateAuthor($request, $response, $args) {
 
-        $input = json_decode($request->getBody());
+        $input = json_decode($request->getBody(), true);
 
-        $errors = $this->_validateAuthor((array)$input, false);
+        $errors = $this->_validateAuthor($input, false);
 
         if (!empty($errors)) {
             return $this->_prepareErrorResponse($response, 405, $errors);
@@ -178,7 +178,7 @@ class AuthorAction {
             return $this->_prepareErrorResponse($response);
         }
 
-        if (!$this->_authorModel->updateAuthor($authorId, (array)$input)) {
+        if (!$this->_authorModel->updateAuthor($authorId, $input)) {
             return $this->_prepareErrorResponse($response);
         }
 
@@ -219,15 +219,15 @@ class AuthorAction {
      */
     private function _addAuthor($request, $response) {
 
-        $input = json_decode($request->getBody());
+        $input = json_decode($request->getBody(), true);
 
-        $errors = $this->_validateAuthor((array)$input);
+        $errors = $this->_validateAuthor($input);
 
         if (!empty($errors)) {
             return $this->_prepareErrorResponse($response, 405, $errors);
         }
 
-        $id = $this->_authorModel->addAuthor((array)$input);
+        $id = $this->_authorModel->addAuthor($input);
 
         if (empty($id)) {
             return $this->_prepareErrorResponse($response);
