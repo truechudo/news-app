@@ -38,7 +38,8 @@ class Author
     private $avatar;
 
     /**
-     * Создание объекта автора. При передаче неверных данных выкидывается исключение.
+     * Создание объекта Author.
+     * При передаче неверных данных выкидывается исключение.
      *
      * @param int $id ID автора
      * @param string $name имя автора
@@ -47,7 +48,7 @@ class Author
      * [
      *  'fileName' => 'путь до картинки',
      *  'width' => 20,
-     *  'рушпре' => 20
+     *  'height' => 20
      * ]
      * @throws Exception    Переданные данные не валидны
      */
@@ -59,11 +60,18 @@ class Author
         $this->avatar = $this->avatar($avatar);
     }
 
-    public function __get($name)
+    /**
+     * Возвращает приватные свойства объекта
+     *
+     * @param string $name имя свойства
+     * @return mixed
+     */
+    public function __get(string $name)
     {
         if (isset($this->$name)) {
             return $this->$name;
         }
+        return null;
     }
 
     /**
@@ -88,11 +96,22 @@ class Author
         return new self($author['id'], $author['name'], $author['nameAblative'], $author['avatar']);
     }
 
+    /**
+     * Установка значения поля ID автора
+     *
+     * @param int $id
+     */
     public function setId(int $id)
     {
         $this->id = $id;
     }
 
+    /**
+     * Установка значения поля name
+     *
+     * @param string $name имя автора
+     * @throws Exception переданное имя не валидно
+     */
     public function setName(string $name)
     {
         if (empty($name)) {
@@ -102,6 +121,12 @@ class Author
         $this->name = $name;
     }
 
+    /**
+     * Установка значения поля nameAblative
+     *
+     * @param string $nameAblative имя автора в творительном падеже
+     * @throws Exception переданное имя не валидно
+     */
     public function setNameAblative(string $nameAblative)
     {
         if (empty($nameAblative)) {
@@ -111,6 +136,17 @@ class Author
         $this->name = $nameAblative;
     }
 
+    /**
+     * Установка значения поля avatar в формате
+     * [
+     *  'fileName' => 'путь до картинки',
+     *  'width' => 20,
+     *  'height' => 20
+     * ]
+     *
+     * @param array $avatar массив с данными о картинке автора
+     * @throws Exception переданные данные не валидны
+     */
     public function setAvatar(array $avatar = [])
     {
         if (!empty($avatar)) {
