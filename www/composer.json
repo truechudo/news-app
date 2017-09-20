@@ -9,9 +9,6 @@
     ],
     "require": {
         "slim/slim": "^3.0"
-        //,
-        //"doctrine/annotations": "1.4",
-        //"zircote/swagger-php": "*"
     },
     "autoload": {
         "psr-4": {
