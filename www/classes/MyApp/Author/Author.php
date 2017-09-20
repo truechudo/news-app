@@ -54,10 +54,10 @@ class Author
      */
     public function __construct(int $id, string $name, string $nameAblative, array $avatar = [])
     {
-        $this->id = $this->setId($id);
-        $this->name = $this->setName($name);
-        $this->nameAblative = $this->setNameAblative($nameAblative);
-        $this->avatar = $this->avatar($avatar);
+        $this->setId($id);
+        $this->setName($name);
+        $this->setNameAblative($nameAblative);
+        $this->setAvatar($avatar);
     }
 
     /**
@@ -82,7 +82,7 @@ class Author
      * @return Author
      * @throws Exception    Переданные данные не валидны
      */
-    public function createFromArray($data) : Author
+    public static function createFromArray($data): Author
     {
         $author['id'] = $data['id'] ?? 0;
         $author['name'] = $data['name'] ?? '';
@@ -93,6 +93,7 @@ class Author
             $author['avatar']['width'] = $data['avatar']['width'] ?? 0;
             $author['avatar']['height'] = $data['avatar']['height'] ?? 0;
         }
+
         return new self($author['id'], $author['name'], $author['nameAblative'], $author['avatar']);
     }
 
@@ -133,7 +134,7 @@ class Author
             throw new Exception('Имя автора в творительном падеже не должно быть пустым');
         }
 
-        $this->name = $nameAblative;
+        $this->nameAblative = $nameAblative;
     }
 
     /**

@@ -1,6 +1,11 @@
 <?php
 namespace MyApp;
 
+/**
+ * Трейт с методом подготовки ответа от апи с ошибкой в json-формате
+ *
+ * @package MyApp
+ */
 trait JsonErrorResponseTrait
 {
     /**

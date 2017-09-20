@@ -85,15 +85,9 @@ class AuthorMapper
             $query->bindParam("id", $author->id);
             $query->bindParam("name", $author->name);
             $query->bindParam("nameAblative", $author->nameAblative);
-            $query->bindParam("avatar", json_encode($author->nameAblative));
+            $query->bindParam("avatar", json_encode($author->avatar));
             $query->execute();
             return $author->id;
-        }
-
-        if (isset($data['avatar'])) {
-            $data['avatar'] = json_encode($data['avatar']);
-        } else {
-            $data['avatar'] = json_encode([]);
         }
 
         $query = $this->_db->prepare("
