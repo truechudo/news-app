@@ -34,22 +34,32 @@ class AuthorAction
      * Вызов нужного метода апи
      *
      * @param ServerRequestInterface $request запрос
-     *
+     * @param ResponseInterface $response ответ
      * @param array $args параметры запроса
      * @return ResponseInterface
      */
     public function __invoke($request, $response, $args = [])
     {
-        switch ($request->getMethod()) {
+        if($request->isPost()) {
+            return $this->addAuthor($request, $response);
+        }
+
+        $method = $request->getMethod();
+        if (in_array($method, ['GET', 'DELETE', 'PUT'])) {
+            if (empty($args['id']) || !filter_var($args['id'], FILTER_VALIDATE_INT)) {
+                return $this->prepareErrorResponse($response, 400, "Неверный запрос. ID должен быть целым числом");
+            }
+        }
+
+        switch ($method) {
             case 'GET':
                 return $this->getAuthor($response, $args);
             case 'DELETE':
                 return $this->deleteAuthor($response, $args);
             case 'PUT':
                 return $this->updateAuthor($request, $response, $args);
-            case 'POST':
-                return $this->addAuthor($request, $response);
         }
+
         return $response;
     }
 
@@ -73,10 +83,6 @@ class AuthorAction
      */
     private function getAuthor($response, $args)
     {
-        if (empty($args['id']) || !filter_var($args['id'], FILTER_VALIDATE_INT)) {
-            return $this->prepareErrorResponse($response, 400, "Неверный запрос. ID должен быть целым числом");
-        }
-
         $author = $this->authorMapper->getAuthor($args['id']);
         if (empty($author)) {
             return $this->prepareErrorResponse($response);
@@ -94,10 +100,6 @@ class AuthorAction
      */
     private function deleteAuthor($response, $args)
     {
-        if (empty($args['id']) || !filter_var($args['id'], FILTER_VALIDATE_INT)) {
-            return $this->prepareErrorResponse($response, 400, "Неверный запрос. ID должен быть целым числом");
-        }
-
         if ($this->authorMapper->deleteAuthor($args['id'])) {
             return $response->withStatus(204);
         }
@@ -115,10 +117,6 @@ class AuthorAction
      */
     private function updateAuthor($request, $response, $args)
     {
-        if (empty($args['id']) || !filter_var($args['id'], FILTER_VALIDATE_INT)) {
-            return $this->prepareErrorResponse($response, 400, "Неверный запрос. ID должен быть целым числом");
-        }
-
         $input = json_decode($request->getBody(), true);
 
         try {
