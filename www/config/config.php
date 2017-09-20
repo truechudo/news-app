@@ -1,4 +1,7 @@
 <?php
+/**
+ * Конфиг с настройками для приложения \Slim\App
+ */
 $config['displayErrorDetails'] = true;
 $config['addContentLengthHeader'] = false;
 

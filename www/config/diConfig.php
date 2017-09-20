@@ -1,4 +1,7 @@
 <?php
+/**
+ * Конфиг с описанием сервисов для di-контейнера
+ */
 
 $diConfig['db'] = function ($c) {
     $db = $c['settings']['mysql'];
@@ -12,6 +15,10 @@ $diConfig['MyApp\Controller\AuthorAction'] = function($c) {
     return new MyApp\Controller\AuthorAction($c->get('db'));
 };
 
+$diConfig['phpErrorHandler'] = function($c) {
+    return new MyApp\Handler\ErrorHandler();
+};
+
 $diConfig['errorHandler'] = function($c) {
     return new MyApp\Handler\ErrorHandler();
 };
@@ -22,8 +29,4 @@ $diConfig['notAllowedHandler'] = function($c) {
 
 $diConfig['notFoundHandler'] = function($c) {
     return new MyApp\Handler\NotFoundHandler();
-};
-
-$diConfig['phpErrorHandler'] = function($c) {
-    return new MyApp\Handler\ErrorHandler();
 };
