@@ -32,10 +32,28 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Success result"
+                        "description": "Successful result",
+                        "schema": {
+                            "$ref": "#/definitions/Author"
+                        }
+                    },
+                    "400": {
+                        "description": "Validation error",
+                        "schema": {
+                            "$ref": "#/definitions/ApiResponseError"
+                        }
                     },
                     "404": {
-                        "description": "Author not found"
+                        "description": "Author not found",
+                        "schema": {
+                            "$ref": "#/definitions/ApiResponseError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/ApiResponseError"
+                        }
                     }
                 }
             },
@@ -54,7 +72,7 @@
                     {
                         "name": "body",
                         "in": "body",
-                        "description": "Author object",
+                        "description": "Объект с данными автора",
                         "required": true,
                         "schema": {
                             "$ref": "#definitions/Author"
@@ -63,13 +81,28 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Success result"
+                        "description": "Successful result",
+                        "schema": {
+                            "$ref": "#/definitions/AuthorId"
+                        }
                     },
-                    "405": {
-                        "description": "Validation error"
+                    "400": {
+                        "description": "Validation error",
+                        "schema": {
+                            "$ref": "#/definitions/ApiResponseError"
+                        }
                     },
                     "404": {
-                        "description": "Author not found"
+                        "description": "Author not found",
+                        "schema": {
+                            "$ref": "#/definitions/ApiResponseError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/ApiResponseError"
+                        }
                     }
                 }
             },
@@ -89,13 +122,28 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Success result"
+                        "description": "Successful result",
+                        "schema": {
+                            "$ref": "#/definitions/AuthorId"
+                        }
                     },
-                    "405": {
-                        "description": "Validation error"
+                    "400": {
+                        "description": "Validation error",
+                        "schema": {
+                            "$ref": "#/definitions/ApiResponseError"
+                        }
                     },
                     "404": {
-                        "description": "Author not found"
+                        "description": "Author not found",
+                        "schema": {
+                            "$ref": "#/definitions/ApiResponseError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/ApiResponseError"
+                        }
                     }
                 }
             },
@@ -113,11 +161,26 @@
                     }
                 ],
                 "responses": {
-                    "200": {
-                        "description": "Success result"
+                    "204": {
+                        "description": "Author deleted"
+                    },
+                    "400": {
+                        "description": "Validation error",
+                        "schema": {
+                            "$ref": "#/definitions/ApiResponseError"
+                        }
                     },
                     "404": {
-                        "description": "Author not found"
+                        "description": "Author not found",
+                        "schema": {
+                            "$ref": "#/definitions/ApiResponseError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/ApiResponseError"
+                        }
                     }
                 }
             }
@@ -125,49 +188,82 @@
     },
     "definitions": {
         "Author": {
+            "type": "object",
+            "title": "Объект автора",
             "required": [
                 "name",
                 "nameAblative"
             ],
             "properties": {
                 "id": {
-                    "description": "ID атора",
+                    "title": "ID атора",
                     "type": "integer",
                     "format": "int64",
                     "example": "1"
                 },
                 "name": {
-                    "description": "Имя автора",
+                    "title": "Имя автора",
                     "type": "string",
                     "example": "Стас Соколов"
                 },
                 "nameAblative": {
-                    "description": "Имя автора в творительном падеже",
+                    "title": "Имя автора в творительном падеже",
                     "type": "string",
                     "example": "со Стасом Соколовым"
                 },
                 "avatar": {
-                    "description": "Картинка автора",
+                    "type": "object",
+                    "title": "Картинка автора",
                     "properties": {
                         "fileName": {
-                            "description": "Путь до картинки",
-                            "type": "string"
+                            "title": "Путь до картинки",
+                            "type": "string",
+                            "example": "/preview/image.jpg"
                         },
                         "width": {
-                            "description": "Ширина картинки",
+                            "title": "Ширина картинки",
                             "type": "integer",
-                            "format": "int32"
+                            "format": "int32",
+                            "example": "30"
                         },
                         "height": {
-                            "description": "Высота картинки",
+                            "title": "Высота картинки",
                             "type": "integer",
-                            "format": "int32"
+                            "format": "int32",
+                            "example": "40"
                         }
-                    },
-                    "type": "object"
+                    }
                 }
-            },
-            "type": "object"
+            }
+        },
+        "AuthorId": {
+            "type": "object",
+            "title": "Объект с id автора",
+            "properties": {
+                "id": {
+                    "title": "ID атора",
+                    "type": "integer",
+                    "format": "int64",
+                    "example": "1"
+                }
+            }
+        },
+        "ApiResponseError": {
+            "type": "object",
+            "title": "Ответ апи с ошибкой",
+            "properties": {
+                "errorCode": {
+                    "description": "Код ошибки",
+                    "type": "integer",
+                    "format": "int32",
+                    "example": "500"
+                },
+                "status": {
+                    "description": "Описание ошибки",
+                    "type": "string",
+                    "example": "Внутренняя ошибка сервера"
+                }
+            }
         }
     }
 }
