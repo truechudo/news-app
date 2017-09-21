@@ -12,7 +12,9 @@ class ErrorHandler
 
     public function __invoke($request, $response, $error)
     {
-        $this->writeErrorLog($error);
+        if ($error instanceof \Throwable) {
+            $this->writeErrorLog($error);
+        }
 
         if ($error instanceof \Exception) {
             return $this->prepareErrorResponse($response, 500, 'Внутренняя ошибка сервера');
