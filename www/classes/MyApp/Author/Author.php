@@ -61,26 +61,12 @@ class Author
     }
 
     /**
-     * Возвращает приватные свойства объекта
-     *
-     * @param string $name имя свойства
-     * @return mixed
-     */
-    public function __get(string $name)
-    {
-        if (isset($this->$name)) {
-            return $this->$name;
-        }
-        return null;
-    }
-
-    /**
      * Создает объект автора из переданного массива данных.
      * При передаче неверных данных выкидывается исключение.
      *
-     * @param $data
-     * @return Author
-     * @throws Exception    Переданные данные не валидны
+     * @param array $data массив в данными
+     * @return Author объект автора
+     * @throws Exception Переданные данные не валидны
      */
     public static function createFromArray($data): Author
     {
@@ -95,6 +81,20 @@ class Author
         }
 
         return new self($author['id'], $author['name'], $author['nameAblative'], $author['avatar']);
+    }
+
+    /**
+     * Возвращает приватные свойства объекта
+     *
+     * @param string $name имя свойства
+     * @return mixed
+     */
+    public function __get(string $name)
+    {
+        if (isset($this->$name)) {
+            return $this->$name;
+        }
+        return null;
     }
 
     /**

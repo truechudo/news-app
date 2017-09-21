@@ -17,7 +17,6 @@ class AuthorAction
      *
      * @var Author\AuthorMapper
      */
-
     protected $authorMapper;
 
     /**
@@ -120,7 +119,7 @@ class AuthorAction
         $input = json_decode($request->getBody(), true);
 
         try {
-            $author['id'] = intval($args['id']);
+            $input['id'] = intval($args['id']);
             $author = Author\Author::createFromArray($input);
 
             if (!$this->authorMapper->saveAuthor($author)) {

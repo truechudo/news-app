@@ -13,9 +13,9 @@ class NotFoundHandler
     /**
      * Возвращает ответ в формате json с кодом ошибки 404
      *
-     * @param $request
-     * @param $response
-     * @return \MyApp\ResponseInterface
+     * @param ServerRequestInterface $request запрос
+     * @param ResponseInterface $response ответ
+     * @return ResponseInterface ответ с ошибкой
      */
     public function __invoke($request, $response)
     {

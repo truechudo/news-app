@@ -10,14 +10,17 @@ class ErrorHandler
 {
     use \MyApp\JsonErrorResponseTrait;
 
+    /**
+     * Возвращает ответ в формате json с кодом ошибки 500
+     *
+     * @param ServerRequestInterface $request запрос
+     * @param ResponseInterface $response ответ
+     * @return ResponseInterface ответ с ошибкой
+     */
     public function __invoke($request, $response, $error)
     {
         if ($error instanceof \Throwable) {
             $this->writeErrorLog($error);
-        }
-
-        if ($error instanceof \Exception) {
-            return $this->prepareErrorResponse($response, 500, 'Внутренняя ошибка сервера');
         }
 
         return $this->prepareErrorResponse($response, 500, 'Внутренняя ошибка сервера');
@@ -26,7 +29,7 @@ class ErrorHandler
     /**
      * Пишет ошибку в error log
      *
-     * @param \Exception|\Throwable $throwable
+     * @param \Exception|\Throwable $throwable  объект ошибки
      *
      * @return void
      */
@@ -44,7 +47,7 @@ class ErrorHandler
     /**
      * Представляет ошибку в текстовое сообщение
      *
-     * @param \Exception|\Throwable $throwable
+     * @param \Exception|\Throwable $throwable объект ошибки
      *
      * @return string
      */

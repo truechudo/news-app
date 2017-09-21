@@ -73,6 +73,9 @@ class AuthorMapper
      */
     public function saveAuthor (Author $author)
     {
+        $data = $author->toArray();
+        $data['avatar'] = json_encode($data['avatar']);
+
         if ($author->id) {
 
             $query = $this->_db->prepare('
@@ -82,27 +85,21 @@ class AuthorMapper
                    avatar = :avatar
                   WHERE id = :id
             ');
-            $query->bindParam("id", $author->id);
-            $query->bindParam("name", $author->name);
-            $query->bindParam("nameAblative", $author->nameAblative);
-            $query->bindParam("avatar", json_encode($author->avatar));
-            $query->execute();
+            $query->execute($data);
             return $author->id;
         }
 
+        unset($data['id']);
         $query = $this->_db->prepare("
               INSERT INTO author
                 (name, nameAblative, avatar)
               VALUES ( :name, :nameAblative, :avatar)
         ");
 
-        $query->bindParam("name", $author->name);
-        $query->bindParam("nameAblative", $author->nameAblative);
-        $query->bindParam("avatar", json_encode($author->avatar));
-
-        if ($query->execute()) {
+        if ($query->execute($data)) {
             return $this->_db->lastInsertId();
         }
+
         return false;
     }
 }

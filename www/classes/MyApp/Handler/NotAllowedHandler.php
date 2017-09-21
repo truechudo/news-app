@@ -13,10 +13,11 @@ class NotAllowedHandler
     /**
      * Возвращает 405 ошибку, если запрашиваемый HTTP-метод не поддерживается
      *
-     * @param $request
-     * @param $response
-     * @param $methods
-     * @return \MyApp\ResponseInterface
+     * @param ServerRequestInterface $request запрос
+     * @param ResponseInterface $response ответ
+     * @return ResponseInterface ответ с ошибкой
+     * @param array $methods разрешенные методы
+     * @return ResponseInterface ответ с ошибкой
      */
     public function __invoke($request, $response, $methods)
     {
